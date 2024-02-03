@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import * as L from 'leaflet';
-import $ from 'jquery';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PoiInfoModalComponent} from "./poi-info-modal/poi-info-modal.component";
+import {marker} from "leaflet";
 
 @Component({
   selector: 'app-map',
@@ -12,7 +14,7 @@ import $ from 'jquery';
 })
 
 export class MapComponent implements OnInit {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private modalService: NgbModal) { }
 
   ngOnInit(): void {
 
@@ -22,20 +24,30 @@ export class MapComponent implements OnInit {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    $.getJSON('/assets/data/borders.geojson', function (data) {
-      L.geoJson(data, {
-        style: {
-          color: 'red',
-          weight: 2,
-          fillOpacity: 0.1
-        }
-      }).addTo(map);
-    });
+    this.http.get('/assets/data/borders.geojson').subscribe(
+      (data: any) => {
+        L.geoJson(data, {
+          style: {
+            color: 'red',
+            weight: 2,
+            fillOpacity: 0.1
+          }
+        }).addTo(map);
+      },
+      (error) => {
+        console.error('Errore nel caricamento del GeoJSON:', error);
+      }
+    );
 
     this.http.get('api/POI/getAllPOI').subscribe(
       (data: any) => {
         data.forEach((dataItem: any) => {
-          L.marker([dataItem.latitude, dataItem.longitude]).addTo(map);
+          const marker = L.marker([dataItem.latitude, dataItem.longitude]).addTo(map);
+          marker.on('click', () => {
+            const modalRef = this.modalService.open(PoiInfoModalComponent);
+            modalRef.componentInstance.modalTitle = dataItem.name;
+            modalRef.componentInstance.description = dataItem.description;
+          })
         });
       },
       (error) => {
