@@ -3,6 +3,7 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import * as L from 'leaflet';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PoiInfoModalComponent} from "./poi-info-modal/poi-info-modal.component";
+import {icon, Marker} from 'leaflet';
 
 @Component({
   selector: 'app-map',
@@ -23,6 +24,17 @@ export class MapComponent implements OnInit {
 
   private initializeMap(): L.Map {
     const map = L.map('map').setView([43.1608, 13.7182], 13);
+    const iconUrl = 'assets/images/marker.png';
+    const shadowUrl = 'assets/images/shadow.png';
+    Marker.prototype.options.icon = icon({
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
