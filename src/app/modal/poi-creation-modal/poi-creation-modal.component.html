@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h4 class="modal-title">Crea un punto di rilievo</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group custom-spacing">
+
+      <label for="poitype">Tipologia</label>
+      <select class="form-control" id="poitype" name="poitype" [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+        <option value="CULTURAL_POI">CULTURALE</option>
+        <option value="EVENT_POI">EVENTO</option>
+        <option value="COMMERCIAL_POI">COMMERCIALE</option>
+        <option value="RECREATIONAL_POI">RICREATIVO</option>
+      </select>
+
+      <label for="name">Nome</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+      <label for="name">Descrizione</label>
+      <input type="text" class="form-control" id="description" name="description" required>
+
+      <label *ngIf="selectedType === 'EVENT_POI'" for="creation">Data partenza:</label>
+      <input *ngIf="selectedType === 'EVENT_POI'" type="date" class="form-control" id="creation" name="creation">
+      <label *ngIf="selectedType === 'EVENT_POI'" for="expire">Data fine:</label>
+      <input *ngIf="selectedType === 'EVENT_POI'" type="date" class="form-control" id="expire" name="expire">
+
+      <label *ngIf="selectedType === 'COMMERCIAL_POI' || selectedType === 'RECREATIONAL_POI'" for="openingTime">Orari di apertura</label>
+      <input *ngIf="selectedType === 'COMMERCIAL_POI' || selectedType === 'RECREATIONAL_POI'" type="text" class="form-control" id="openingTime" name="openingTime" required>
+
+      <label *ngIf="selectedType === 'RECREATIONAL_POI'" for="activities">Attività praticabili</label>
+      <input *ngIf="selectedType === 'RECREATIONAL_POI'" type="text" class="form-control" id="activities" name="activities" required>
+
+      <button type="button" class="btn btn-primary">Conferma</button>
+
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Chiudi</button>
+</div>

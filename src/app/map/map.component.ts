@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import * as L from 'leaflet';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {PoiInfoModalComponent} from "./poi-info-modal/poi-info-modal.component";
-import {icon, Marker} from 'leaflet';
+import {PoiInfoModalComponent} from "../modal/poi-info-modal/poi-info-modal.component";
+import * as L from 'leaflet';
+import {PoiCreationModalComponent} from "../modal/poi-creation-modal/poi-creation-modal.component";
 
 @Component({
   selector: 'app-map',
@@ -14,6 +14,7 @@ import {icon, Marker} from 'leaflet';
 })
 
 export class MapComponent implements OnInit {
+
   constructor(private http: HttpClient, private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -26,7 +27,7 @@ export class MapComponent implements OnInit {
     const map = L.map('map').setView([43.1608, 13.7182], 13);
     const iconUrl = 'assets/images/marker.png';
     const shadowUrl = 'assets/images/shadow.png';
-    Marker.prototype.options.icon = icon({
+    L.Marker.prototype.options.icon = L.icon({
       iconUrl,
       shadowUrl,
       iconSize: [25, 41],
@@ -39,6 +40,8 @@ export class MapComponent implements OnInit {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+
+    this.setMapClickEvent(map);
 
     return map;
   }
@@ -79,6 +82,12 @@ export class MapComponent implements OnInit {
       const modalRef = this.modalService.open(PoiInfoModalComponent);
       modalRef.componentInstance.modalTitle = dataItem.name;
       modalRef.componentInstance.description = dataItem.description;
+    });
+  }
+
+  private setMapClickEvent(map: L.Map) {
+    map.on('click', (e) => {
+      const modalRef = this.modalService.open(PoiCreationModalComponent);
     });
   }
 }

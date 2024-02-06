@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../authentication.service';
-import {environment} from "../../environments/environment.development";
+import { AuthenticationService } from '../../authentication.service';
+import {environment} from "../../../environments/environment.development";
 
 @Component({
   selector: 'app-login-modal',
