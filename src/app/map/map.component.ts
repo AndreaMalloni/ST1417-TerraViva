@@ -4,6 +4,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PoiInfoModalComponent} from "../modal/poi-info-modal/poi-info-modal.component";
 import * as L from 'leaflet';
 import {PoiCreationModalComponent} from "../modal/poi-creation-modal/poi-creation-modal.component";
+import {PoiServices} from "../services/poi.services";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-map',
@@ -15,12 +17,15 @@ import {PoiCreationModalComponent} from "../modal/poi-creation-modal/poi-creatio
 
 export class MapComponent implements OnInit {
 
-  constructor(private http: HttpClient, private modalService: NgbModal) { }
+  map!: L.Map;
+
+  constructor(private http: HttpClient, private modalService: NgbModal, private poiServices: PoiServices, private authService: AuthenticationService) { }
 
   ngOnInit(): void {
-    const map = this.initializeMap();
-    this.loadBordersGeoJson(map);
-    this.loadPoiMarkers(map);
+    this.map = this.initializeMap();
+    this.loadBordersGeoJson(this.map);
+    this.loadPoiMarkers(this.map);
+    this.setMapClickEvent(this.map);
   }
 
   private initializeMap(): L.Map {
@@ -40,8 +45,6 @@ export class MapComponent implements OnInit {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-
-    this.setMapClickEvent(map);
 
     return map;
   }
@@ -64,15 +67,15 @@ export class MapComponent implements OnInit {
   }
 
   private loadPoiMarkers(map: L.Map): void {
-    this.http.get('api/POI/getAllPOI').subscribe(
-      (data: any) => {
-        data.forEach((dataItem: any) => {
-          const marker = L.marker([dataItem.latitude, dataItem.longitude]).addTo(map);
-          this.setupMarkerClickEvent(marker, dataItem);
+    this.poiServices.getPOI().subscribe(
+      response => {
+        response.forEach((poi: any) => {
+          const marker = L.marker([poi.latitude, poi.longitude]).addTo(map);
+          this.setupMarkerClickEvent(marker, poi);
         });
       },
-      (error) => {
-        console.error('Errore nella richiesta HTTP:', error);
+      error => {
+        console.error(error);
       }
     );
   }
@@ -87,7 +90,18 @@ export class MapComponent implements OnInit {
 
   private setMapClickEvent(map: L.Map) {
     map.on('click', (e) => {
-      const modalRef = this.modalService.open(PoiCreationModalComponent);
+      if (this.authService.checkLogin()) {
+        this.openPOICreationModal(e);
+      }
     });
+  }
+
+  private openPOICreationModal(e: L.LeafletMouseEvent) {
+    const modalRef = this.modalService.open(PoiCreationModalComponent);
+    modalRef.componentInstance.formData.latitude = e.latlng.lat;
+    modalRef.componentInstance.formData.longitude = e.latlng.lng;
+    modalRef.result.then(() => {
+      this.loadPoiMarkers(this.map);
+    })
   }
 }

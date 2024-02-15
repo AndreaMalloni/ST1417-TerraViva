@@ -7,7 +7,7 @@
     <div class="form-group custom-spacing">
 
       <label for="poitype">Tipologia</label>
-      <select class="form-control" id="poitype" name="poitype" [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+      <select class="form-control" id="poitype" name="poitype" [(ngModel)]="formData.type" (ngModelChange)="onTypeChange()">
         <option value="CULTURAL_POI">CULTURALE</option>
         <option value="EVENT_POI">EVENTO</option>
         <option value="COMMERCIAL_POI">COMMERCIALE</option>
@@ -15,22 +15,22 @@
       </select>
 
       <label for="name">Nome</label>
-      <input type="text" class="form-control" id="name" name="name" required>
+      <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="formData.name">
       <label for="name">Descrizione</label>
-      <input type="text" class="form-control" id="description" name="description" required>
+      <input type="text" class="form-control" id="description" name="description" required [(ngModel)]="formData.description">
 
-      <label *ngIf="selectedType === 'EVENT_POI'" for="creation">Data partenza:</label>
-      <input *ngIf="selectedType === 'EVENT_POI'" type="date" class="form-control" id="creation" name="creation">
-      <label *ngIf="selectedType === 'EVENT_POI'" for="expire">Data fine:</label>
-      <input *ngIf="selectedType === 'EVENT_POI'" type="date" class="form-control" id="expire" name="expire">
+      <label *ngIf="formData.type === 'EVENT_POI'" for="creation">Data partenza:</label>
+      <input *ngIf="formData.type === 'EVENT_POI'" type="date" class="form-control" id="creation" name="creation" [(ngModel)]="formData.creation">
+      <label *ngIf="formData.type === 'EVENT_POI'" for="expire">Data fine:</label>
+      <input *ngIf="formData.type === 'EVENT_POI'" type="date" class="form-control" id="expire" name="expire" [(ngModel)]="formData.expire">
 
-      <label *ngIf="selectedType === 'COMMERCIAL_POI' || selectedType === 'RECREATIONAL_POI'" for="openingTime">Orari di apertura</label>
-      <input *ngIf="selectedType === 'COMMERCIAL_POI' || selectedType === 'RECREATIONAL_POI'" type="text" class="form-control" id="openingTime" name="openingTime" required>
+      <label *ngIf="formData.type === 'COMMERCIAL_POI' || formData.type === 'RECREATIONAL_POI'" for="openingTime">Orari di apertura</label>
+      <input *ngIf="formData.type === 'COMMERCIAL_POI' || formData.type === 'RECREATIONAL_POI'" type="text" class="form-control" id="openingTime" name="openingTime" required [(ngModel)]="formData.openingTime">
 
-      <label *ngIf="selectedType === 'RECREATIONAL_POI'" for="activities">Attività praticabili</label>
-      <input *ngIf="selectedType === 'RECREATIONAL_POI'" type="text" class="form-control" id="activities" name="activities" required>
+      <label *ngIf="formData.type === 'RECREATIONAL_POI'" for="activities">Attività praticabili</label>
+      <input *ngIf="formData.type === 'RECREATIONAL_POI'" type="text" class="form-control" id="activities" name="activities" required [(ngModel)]="formData.activities">
 
-      <button type="button" class="btn btn-primary">Conferma</button>
+      <button type="button" class="btn btn-primary" (click)="onSubmit()">Conferma</button>
 
     </div>
   </form>
