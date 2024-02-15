@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {MapComponent} from "./map/map.component";
-import {LoginModalComponent} from "./login-modal/login-modal.component";
+import {LoginModalComponent} from "./modal/login-modal/login-modal.component";
 
 @Component({
   selector: 'app-root',

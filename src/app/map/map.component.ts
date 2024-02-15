@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {PoiInfoModalComponent} from "../modal/poi-info-modal/poi-info-modal.component";
 import * as L from 'leaflet';
-import {icon, Marker} from 'leaflet';
-import $ from 'jquery';
+import {PoiCreationModalComponent} from "../modal/poi-creation-modal/poi-creation-modal.component";
+import {PoiServices} from "../services/poi.services";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-map',
@@ -13,14 +16,23 @@ import $ from 'jquery';
 })
 
 export class MapComponent implements OnInit {
-  constructor(private http: HttpClient) { }
+
+  map!: L.Map;
+
+  constructor(private http: HttpClient, private modalService: NgbModal, private poiServices: PoiServices, private authService: AuthenticationService) { }
 
   ngOnInit(): void {
+    this.map = this.initializeMap();
+    this.loadBordersGeoJson(this.map);
+    this.loadPoiMarkers(this.map);
+    this.setMapClickEvent(this.map);
+  }
 
+  private initializeMap(): L.Map {
     const map = L.map('map').setView([43.1608, 13.7182], 13);
     const iconUrl = 'assets/images/marker.png';
     const shadowUrl = 'assets/images/shadow.png';
-    Marker.prototype.options.icon = icon({
+    L.Marker.prototype.options.icon = L.icon({
       iconUrl,
       shadowUrl,
       iconSize: [25, 41],
@@ -34,25 +46,62 @@ export class MapComponent implements OnInit {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    $.getJSON('/assets/data/borders.geojson', function (data) {
-      L.geoJson(data, {
-        style: {
-          color: 'red',
-          weight: 2,
-          fillOpacity: 0.1
-        }
-      }).addTo(map);
-    });
+    return map;
+  }
 
-    this.http.get('api/POI/getAllPOI').subscribe(
+  private loadBordersGeoJson(map: L.Map): void {
+    this.http.get('/assets/data/borders.geojson').subscribe(
       (data: any) => {
-        data.forEach((dataItem: any) => {
-          L.marker([dataItem.latitude, dataItem.longitude]).addTo(map);
-        });
+        L.geoJson(data, {
+          style: {
+            color: 'red',
+            weight: 2,
+            fillOpacity: 0.1
+          }
+        }).addTo(map);
       },
       (error) => {
-        console.error('Errore nella richiesta HTTP:', error);
+        console.error('Errore nel caricamento del GeoJSON:', error);
       }
     );
+  }
+
+  private loadPoiMarkers(map: L.Map): void {
+    this.poiServices.getPOI().subscribe(
+      response => {
+        response.forEach((poi: any) => {
+          const marker = L.marker([poi.latitude, poi.longitude]).addTo(map);
+          this.setupMarkerClickEvent(marker, poi);
+        });
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+
+  private setupMarkerClickEvent(marker: L.Marker, dataItem: any): void {
+    marker.on('click', () => {
+      const modalRef = this.modalService.open(PoiInfoModalComponent);
+      modalRef.componentInstance.modalTitle = dataItem.name;
+      modalRef.componentInstance.description = dataItem.description;
+    });
+  }
+
+  private setMapClickEvent(map: L.Map) {
+    map.on('click', (e) => {
+      if (this.authService.checkLogin()) {
+        this.openPOICreationModal(e);
+      }
+    });
+  }
+
+  private openPOICreationModal(e: L.LeafletMouseEvent) {
+    const modalRef = this.modalService.open(PoiCreationModalComponent);
+    modalRef.componentInstance.formData.latitude = e.latlng.lat;
+    modalRef.componentInstance.formData.longitude = e.latlng.lng;
+    modalRef.result.then(() => {
+      this.loadPoiMarkers(this.map);
+    })
   }
 }
