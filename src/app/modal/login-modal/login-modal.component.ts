@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from '../../authentication.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import {environment} from "../../../environments/environment.development";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-login-modal',
   standalone: true,
-  imports: [],
+  imports: [
+    FormsModule
+  ],
   templateUrl: './login-modal.component.html',
   styleUrl: './login-modal.component.css'
 })
@@ -13,18 +16,18 @@ import {environment} from "../../../environments/environment.development";
 export class LoginModalComponent {
   constructor(private authService: AuthenticationService) { }
 
-  onSubmit() {
-    const username = (<HTMLInputElement>document.getElementById("inputUsername")).value;
-    const password = (<HTMLInputElement>document.getElementById("inputPassword")).value;
+  formData: any = {};
 
-    this.authService.login(username, password).subscribe(
+  onSubmit() {
+
+    this.authService.login(this.formData).subscribe(
       response => {
-        environment.token = response.token
+        environment.token = response.token;
+        environment.username = response.username;
       },
       error => {
         console.error(error);
       }
     );
   }
-
 }
