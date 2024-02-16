@@ -14,16 +14,19 @@ import {FormsModule} from "@angular/forms";
 })
 
 export class LoginModalComponent {
+
   constructor(private authService: AuthenticationService) { }
 
   formData: any = {};
+  userInfo!: { username: string; role: string; };
 
   onSubmit() {
 
     this.authService.login(this.formData).subscribe(
       response => {
+        this.userInfo = this.authService.getInfo(response.token);
         environment.token = response.token;
-        environment.username = response.username;
+        environment.username = this.userInfo.username;
       },
       error => {
         console.error(error);
