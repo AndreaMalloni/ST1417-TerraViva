@@ -17,11 +17,11 @@ export class PoiServices {
 
   creation(body: any): Observable<any> {
 
-    body.author = {username: environment.username};
+    body.author = {username: sessionStorage.getItem("username")};
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${environment.token}`
+      'Authorization': `Bearer ${sessionStorage.getItem("username")}`
     });
 
     const options = {headers: headers};

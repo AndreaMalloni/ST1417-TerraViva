@@ -20,7 +20,7 @@ export class AuthenticationService {
   }
 
   public checkLogin(): boolean {
-    return !(environment.token == "" && environment.username == "");
+    return !(sessionStorage.getItem("token") == null && sessionStorage.getItem("username") == null);
   }
 
   getInfo(token: string): { username: string, role: string } {

@@ -21,12 +21,12 @@ export class LoginModalComponent {
   userInfo!: { username: string; role: string; };
 
   onSubmit() {
-
+    console.log("test")
     this.authService.login(this.formData).subscribe(
       response => {
         this.userInfo = this.authService.getInfo(response.token);
-        environment.token = response.token;
-        environment.username = this.userInfo.username;
+        sessionStorage.setItem("token", response.token)
+        sessionStorage.setItem("username", this.userInfo.username)
       },
       error => {
         console.error(error);
