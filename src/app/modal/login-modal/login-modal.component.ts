@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../../services/authentication.service';
-import {environment} from "../../../environments/environment.development";
 import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
+import sha256 from 'crypto-js/sha256';
 
 @Component({
   selector: 'app-login-modal',
@@ -24,6 +24,7 @@ export class LoginModalComponent {
   userInfo!: { username: string; role: string; };
 
   onSubmit() {
+    this.formData.password = sha256(this.formData.password).toString();
     this.authService.login(this.formData).subscribe(
       response => {
         this.userInfo = this.authService.getInfo(response.token);
