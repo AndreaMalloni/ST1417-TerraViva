@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import * as L from 'leaflet';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {PoiInfoModalComponent} from "./poi-info-modal/poi-info-modal.component";
+import {PoiInfoModalComponent} from "../modal/poi-info-modal/poi-info-modal.component";
 
 @Component({
   selector: 'app-map',
@@ -65,8 +65,7 @@ export class MapComponent implements OnInit {
   private setupMarkerClickEvent(marker: L.Marker, dataItem: any): void {
     marker.on('click', () => {
       const modalRef = this.modalService.open(PoiInfoModalComponent);
-      modalRef.componentInstance.modalTitle = dataItem.name;
-      modalRef.componentInstance.description = dataItem.description;
+      modalRef.componentInstance.poiData = dataItem;
     });
   }
 }
