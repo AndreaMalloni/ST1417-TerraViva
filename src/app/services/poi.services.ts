@@ -21,7 +21,7 @@ export class PoiServices {
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${sessionStorage.getItem("username")}`
+      'Authorization': `Bearer ${sessionStorage.getItem("token")}`
     });
 
     const options = {headers: headers};
