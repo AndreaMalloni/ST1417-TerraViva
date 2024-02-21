@@ -9,7 +9,7 @@ import sha256 from 'crypto-js/sha256';
   standalone: true,
   imports: [
     FormsModule,
-    NgIf
+    NgIf,
   ],
   templateUrl: './login-modal.component.html',
   styleUrl: './login-modal.component.css'
@@ -36,6 +36,7 @@ export class LoginModalComponent {
         console.error(error);
       }
     );
+    this.formData = {};
   }
 
   onLogout() {
