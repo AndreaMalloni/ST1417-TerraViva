@@ -12,7 +12,7 @@ export class PoiServices {
   }
 
   getPOI(): Observable<any> {
-    return this.http.get<any>("/api/POI/getAllPOI");
+    return this.http.get<any>(environment.baseURL + "/api/POI/getAllPOI");
   }
 
   creation(body: any): Observable<any> {

@@ -9,12 +9,11 @@ export const tokenSetterInterceptor: HttpInterceptorFn = (req, next) => {
   ]
 
   for (const url in tokenNotNeeded) {
-    if(req.url == url) {
+    if(req.url == tokenNotNeeded[url]) {
       return next(req);
     }
   }
 
   req = req.clone({ setHeaders: {'Authorization': `Bearer ${sessionStorage.getItem("token")}`} })
-  console.log(req.headers.get("Authorization"));
   return next(req);
 };
