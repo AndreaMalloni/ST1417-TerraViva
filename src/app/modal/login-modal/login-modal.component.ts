@@ -27,10 +27,7 @@ export class LoginModalComponent {
     this.formData.password = sha256(this.formData.password).toString();
     this.authService.login(this.formData).subscribe(
       response => {
-        this.userInfo = this.authService.getInfo(response.token);
-        sessionStorage.setItem("token", response.token)
-        sessionStorage.setItem("username", this.userInfo.username)
-        this.loggedIn = this.authService.checkLogin()
+        this.setLoggedStatus(response.token)
       },
       error => {
         console.error(error);
@@ -49,16 +46,20 @@ export class LoginModalComponent {
     this.formData.password = sha256(this.formData.password).toString();
     this.authService.register(this.formData).subscribe(
       response => {
-        this.userInfo = this.authService.getInfo(response.token);
-        sessionStorage.setItem("token", response.token)
-        sessionStorage.setItem("username", this.userInfo.username)
-        this.loggedIn = this.authService.checkLogin()
+        this.setLoggedStatus(response.token)
       },
       error => {
         console.error(error);
       }
     );
     this.formData = {};
+  }
+
+  setLoggedStatus(token: string) {
+    this.userInfo = this.authService.getInfo(token);
+    sessionStorage.setItem("token", token)
+    sessionStorage.setItem("username", this.userInfo.username)
+    this.loggedIn = this.authService.checkLogin()
   }
 
   protected readonly sessionStorage = sessionStorage;
