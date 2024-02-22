@@ -20,8 +20,7 @@ export class PoiServices {
     body.author = {username: sessionStorage.getItem("username")};
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${sessionStorage.getItem("username")}`
+      'Content-Type': 'application/json'
     });
 
     const options = {headers: headers};

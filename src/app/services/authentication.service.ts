@@ -19,6 +19,10 @@ export class AuthenticationService {
     return this.http.post<any>(environment.baseURL + "/api/login", body);
   }
 
+  public register(body: any): Observable<any> {
+    return this.http.post<any>(environment.baseURL + "/api/register", body);
+  }
+
   public checkLogin(): boolean {
     return !(sessionStorage.getItem("token") == null && sessionStorage.getItem("username") == null);
   }
