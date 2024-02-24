@@ -12,7 +12,7 @@ export class PoiServices {
   }
 
   getPOI(): Observable<any> {
-    return this.http.get<any>(environment.baseURL + "/api/POI/getAllPOI");
+    return this.http.get<any>(environment.baseURL + "/api/POI");
   }
 
   creation(body: any): Observable<any> {
@@ -25,6 +25,6 @@ export class PoiServices {
 
     const options = {headers: headers};
 
-    return this.http.post<any>(environment.baseURL + "/api/POI/creation", body, options);
+    return this.http.post<any>(environment.baseURL + "/api/POI", body, options);
   }
 }
