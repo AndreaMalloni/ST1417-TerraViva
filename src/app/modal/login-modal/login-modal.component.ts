@@ -57,7 +57,7 @@ export class LoginModalComponent {
 
   setLoggedStatus(token: string) {
     this.userInfo = this.authService.getInfo(token);
-    sessionStorage.setItem("token", token)
+    sessionStorage.setItem("token", encodeURIComponent(token))
     sessionStorage.setItem("username", this.userInfo.username)
     this.loggedIn = this.authService.checkLogin()
   }
