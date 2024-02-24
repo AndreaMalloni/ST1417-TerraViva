@@ -83,8 +83,7 @@ export class MapComponent implements OnInit {
   private setupMarkerClickEvent(marker: L.Marker, dataItem: any): void {
     marker.on('click', () => {
       const modalRef = this.modalService.open(PoiInfoModalComponent);
-      modalRef.componentInstance.modalTitle = dataItem.name;
-      modalRef.componentInstance.description = dataItem.description;
+      modalRef.componentInstance.poiData = dataItem;
     });
   }
 

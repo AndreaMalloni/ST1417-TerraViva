@@ -1,9 +1,22 @@
 <div class="modal-header">
-  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <h4 class="modal-title">{{ poiData.name }}</h4>
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
-  <p class="description">{{ description }}</p>
+  <p>{{ poiData.description }}</p>
+
+  <p *ngIf="poiData.type === 'EVENT_POI'"><strong>Data inizio: </strong>{{ poiData.creation | date: 'dd/MM/yyyy' }}</p>
+  <p *ngIf="poiData.type === 'EVENT_POI'"><strong>Data fine: </strong>{{ poiData.expire | date: 'dd/MM/yyyy' }}</p>
+
+  <p *ngIf="poiData.type === 'COMMERCIAL_POI' || poiData.type === 'RECREATIONAL_POI'"><strong>Orari di apertura: </strong>{{ poiData.openingTime }}</p>
+
+  <p *ngIf="poiData.type === 'RECREATIONAL_POI'"><strong>Attività praticabili: </strong>{{ poiData.activities }}</p>
+
+  <hr>
+
+  <p><strong>Tipologia: </strong>{{ poiData.type }}</p>
+  <p><strong>Creato da: </strong>{{ poiData.author.username }}</p>
+
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Chiudi</button>

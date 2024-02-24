@@ -14,6 +14,9 @@ export const tokenSetterInterceptor: HttpInterceptorFn = (req, next) => {
     }
   }
 
-  req = req.clone({ setHeaders: {'Authorization': `Bearer ${sessionStorage.getItem("token")}`} })
+  const storedToken = sessionStorage.getItem("token");
+  const token = storedToken ? decodeURIComponent(storedToken) : null;
+
+  req = req.clone({ setHeaders: {'Authorization': `Bearer ${token}`} })
   return next(req);
 };
