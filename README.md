@@ -1,7 +1,4 @@
 # ST1417-TerraViva
-
-_**IL PROGETTO VERRÀ ULTERIORMENTE MODIFICATO DOPO LA CONSEGNA DEL 19 FEBBRAIO!**_
-
 Progetto sviluppato dagli studenti [Daniele Monaldi](https://github.com/danielemonaldi), [Andrea Malloni](https://github.com/AndreaMalloni) e [Francesca Morici](https://github.com/Frangiosc) per il conseguimento della prima parte dell'esame di **Applicazioni Web, Mobile e Cloud** del corso di Informatica per la comunicazione digitale (A.A. 2023-2024).
 
 ## Descrizione del progetto
